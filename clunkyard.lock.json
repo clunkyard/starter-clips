@@ -1,18 +1,18 @@
 {
-  "version": "v2.0.0-kit.1",
+  "version": "v2.0.0-kit.2",
   "sdkVersion": "2.0.0",
   "language": "clips",
   "portable": false,
   "engine": {
-    "file": "clunkyard-engine-v2.0.0-kit.1.tar.gz",
-    "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.1/clunkyard-engine-v2.0.0-kit.1.tar.gz",
+    "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
+    "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
     "bytes": 7071301,
     "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
     "expandedBytes": 33794538
   },
   "sdk": {
-    "file": "clunkyard-sdk-clips-linux-x64-v2.0.0-kit.1.tar.gz",
-    "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.1/clunkyard-sdk-clips-linux-x64-v2.0.0-kit.1.tar.gz",
+    "file": "clunkyard-sdk-clips-linux-x64-v2.0.0-kit.2.tar.gz",
+    "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-sdk-clips-linux-x64-v2.0.0-kit.2.tar.gz",
     "bytes": 801789,
     "sha256": "1f5b44c305d13e3b04be6a520aada04706210c769f290ab3ff7516f51397a557",
     "expandedBytes": 4384028
@@ -22,5 +22,21 @@
     "node",
     "make",
     "python3"
-  ]
+  ],
+  "requirements": {
+    "checks": [
+      {
+        "label": "clipspy Python package",
+        "command": "python3",
+        "args": [
+          "-c",
+          "import clips; assert hasattr(clips, \"Environment\")"
+        ],
+        "hint": "Activate a Python virtual environment, then run python3 -m pip install clipspy==1.0.6."
+      }
+    ],
+    "notes": [
+      "CLIPS uses Python 3 and clipspy 1.0.6, installed into the Python environment you run the kit from. A standalone clips executable does not replace clipspy."
+    ]
+  }
 }
