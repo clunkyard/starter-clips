@@ -5,6 +5,8 @@
 ; end adjust or override what the first ones chose.
 
 (defglobal ?*search-turn* = 0.33)  ; enough to turn against the brake in the force rulesets
+; Dodges taken, and the tick the current one ends.
+(defglobal ?*dodges* = 0 ?*dodge-end* = 0)
 
 (defrule brake
   =>
@@ -22,6 +24,7 @@
   ; The heaviest shot that still covers the range in about a second,
   ; aimed where the target will be, lobbed under gravity.
   (bind ?power (power-for-flight-time ?range))
+  ; lead is the intercept if the target holds course.
   (bind ?lead (lead ?tx ?ty ?tz ?vx ?vy ?vz ?power))
   (bind ?to-heading (if (multifieldp ?lead) then (nth$ 1 ?lead) else ?bearing))
   (bind ?to-pitch (if (multifieldp ?lead) then (nth$ 2 ?lead) else ?elevation))
@@ -64,6 +67,33 @@
   (assert (scan (heading (mod (+ ?scan 36) 360)) (arc 40)
                 (pitch (if (and (eq ?is-3d TRUE) (= ?gravity 0)) then (* (- (mod (div ?tick 10) 3) 1) 35) else 0))))
   (assert (status (text "SEARCH"))))
+
+; A simple dodge: vary it, or predict the shooter. A shot heard once the
+; last dodge is over starts the next for 10 ticks.
+(defrule hear-shot
+  (declare (salience -5))
+  (exists (contact (source muzzle)))
+  (state (tick ?tick&:(>= ?tick ?*dodge-end*)))
+  =>
+  (bind ?*dodges* (+ ?*dodges* 1))
+  (bind ?*dodge-end* (+ ?tick 10)))
+
+; Off the line of fire while it lasts: left, then right next time (turn is
+; positive left, strafe positive right). Aim, scan and fire are as chosen.
+(defrule dodge
+  (declare (salience -6))
+  (state (tick ?tick))
+  (game (control ?control))
+  ?drive <- (drive)
+  (not (dodged))
+  =>
+  (if (< ?tick ?*dodge-end*) then
+    (assert (dodged))
+    (bind ?left (= (mod ?*dodges* 2) 1))
+    (if (eq ?control forces)
+     then (modify ?drive (throttle 0.5)) (assert (forces (strafe (if ?left then -1 else 1))))
+     else (modify ?drive (throttle 1) (turn (if ?left then 1 else -1))))
+    (assert (status (text (if ?left then "dodge:left" else "dodge:right")) (value ?*dodges*)))))
 
 ; Low battery: drive gently so the shots can still be paid for.
 (defrule low-battery

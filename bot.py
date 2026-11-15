@@ -22,7 +22,8 @@
 # clock: tick seconds remaining_ticks
 # arena: size gravity terrain_kind ground_height(x y)
 # me: health position velocity heading pitch roll angular_velocity
-#   attitude grounded altitude applied
+#   attitude grounded altitude applied hull_mounts to_mount(heading pitch)
+#   from_mount(heading pitch) mount_toward(point)
 # battery: charge capacity regen sustainable_drive compute
 #   drive_cost(fraction)
 # drive: hover_lift
@@ -44,7 +45,8 @@
 # score: me best armour
 # angles: normalize(degrees) angle_diff(target current)
 #   bearing_to(from to) elevation_to(from to) direction(heading pitch)
-#   distance(a b) clamp(value low high)
+#   distance(a b) to_chassis(heading pitch attitude)
+#   from_chassis(heading pitch attitude) clamp(value low high)
 # raw: number(path) text(path) has(path) flag(path) count(path) line()
 # Controls: drive.set(throttle turn pitch_turn)
 #   drive.forces(thrust strafe lift yaw_torque pitch_torque roll_torque brake)
