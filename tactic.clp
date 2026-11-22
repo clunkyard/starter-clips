@@ -1,15 +1,5 @@
-; The tactic: CLIPS rules from the tick's facts to its controls. Each turn
-; the SDK asserts the facts (me, contact, cue, zone, storm …; clunkyard.clp
-; lists them all) and sends what these rules assert. For the same control,
-; a later fact overrides an earlier one, so the low-salience rules at the
-; end adjust or override what the first ones chose.
-;
-; Bearing is earned: a scan contact's bearing is off by up to its
-; bearing-error (degrees, a fixed share of the arc), so a wide beam finds a
-; robot and a narrow one aims at it. The robot narrows the beam, holds it on
-; the target and aims along a line fitted through its recent sightings.
-; Contacts within 120 units are exact.
-
+; Low-salience rules run last and can override controls chosen earlier.
+; Clunkyard guide: https://clunkyard.com/sdk/clips
 (defglobal ?*search-turn* = 0.33)  ; enough to turn against the brake in the force rulesets
 (defglobal ?*search-arc* = 40)     ; degrees: sweeps the circle in half a second
 (defglobal ?*hold-width* = 60)     ; units across at the target: it stays in the beam from tick to tick
